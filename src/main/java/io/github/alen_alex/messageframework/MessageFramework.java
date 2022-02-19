@@ -1,8 +1,11 @@
 package io.github.alen_alex.messageframework;
 
+import io.github.alen_alex.messageframework.builder.framework.FrameworkBuilder;
+import io.github.alen_alex.messageframework.builder.title.ComponentTitleBuilder;
 import io.github.alen_alex.messageframework.placeholders.InternalPlaceholders;
 import io.github.alen_alex.messageframework.translator.TranslatorEngine;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.title.Title;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -111,5 +114,21 @@ public interface MessageFramework {
 
     void sendActionBarComponent(@NotNull List<UUID> playerUIDs, @NotNull Component message);
 
+    void sendTitle(@NotNull Player player, @NotNull Title title);
+
+    void sendTitle(@NotNull UUID uuid, @NotNull Title title);
+
+    void sendTitle(@NotNull List<UUID> playerUID, @NotNull Title title);
+
+    void sendTitle(@NotNull Player player, @NotNull ComponentTitleBuilder builder);
+
+    void sendTitle(@NotNull UUID uuid, @NotNull ComponentTitleBuilder builder);
+
+    void sendTitle(@NotNull List<UUID> playerUID, @NotNull ComponentTitleBuilder builder);
+
     TranslatorEngine engine() throws IllegalAccessException;
+
+    default FrameworkBuilder builder(){
+        return new FrameworkBuilder();
+    }
 }

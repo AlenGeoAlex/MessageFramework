@@ -2,7 +2,8 @@ package io.github.alen_alex.messageframework.bukkit;
 
 import io.github.alen_alex.messageframework.MessageFramework;
 import io.github.alen_alex.messageframework.abstracts.AbstractTranslator;
-import io.github.alen_alex.messageframework.builder.title.StringTitleBuilder;
+
+import io.github.alen_alex.messageframework.builder.title.ComponentTitleBuilder;
 import io.github.alen_alex.messageframework.placeholders.InternalPlaceholders;
 import io.github.alen_alex.messageframework.translator.TranslatorEngine;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
@@ -516,6 +517,38 @@ public class BukkitMessageFramework extends AbstractTranslator implements Messag
     @Override
     public void sendActionBarComponent(@NotNull List<UUID> playerUIDs, @NotNull Component message) {
         playerUIDs.iterator().forEachRemaining(uid -> this.sendActionBarComponent(playerUIDs,message));
+    }
+
+    @Override
+    public void sendTitle(@NotNull Player player, @NotNull Title title) {
+        audiences.player(player).showTitle(title);
+    }
+
+    @Override
+    public void sendTitle(@NotNull UUID playerUID, @NotNull Title title) {
+        audiences.player(playerUID).showTitle(title);
+
+    }
+
+    @Override
+    public void sendTitle(@NotNull List<UUID> playerUID, @NotNull Title title) {
+        playerUID.iterator().forEachRemaining(uid -> this.sendTitle(uid,title));
+    }
+
+    @Override
+    public void sendTitle(@NotNull Player player, @NotNull ComponentTitleBuilder builder) {
+        this.sendTitle(player,builder.build());
+    }
+
+    @Override
+    public void sendTitle(@NotNull UUID playerUID, @NotNull ComponentTitleBuilder builder) {
+        this.sendTitle(playerUID,builder.build());
+
+    }
+
+    @Override
+    public void sendTitle(@NotNull List<UUID> playerUID, @NotNull ComponentTitleBuilder builder) {
+        this.sendTitle(playerUID,builder.build());
     }
 
     @Override

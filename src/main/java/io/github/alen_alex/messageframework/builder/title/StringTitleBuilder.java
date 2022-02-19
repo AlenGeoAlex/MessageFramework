@@ -38,6 +38,24 @@ public final class StringTitleBuilder extends ComponentTitleBuilder{
         return this;
     }
 
+    @Override
+    public StringTitleBuilder fadeIn(long fadeIn){
+        super.fadeIn(fadeIn);
+        return this;
+    }
+
+    @Override
+    public StringTitleBuilder fadeOut(long fadeOut){
+        super.fadeOut(fadeIn);
+        return this;
+    }
+
+    @Override
+    public StringTitleBuilder stay(long stay){
+        super.stay(stay);
+        return this;
+    }
+
     public static StringTitleBuilder builder(@NotNull String title, @NotNull TranslatorEngine engine){
         return new StringTitleBuilder(title,engine);
     }
