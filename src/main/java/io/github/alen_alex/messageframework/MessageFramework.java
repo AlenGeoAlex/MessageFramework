@@ -1,16 +1,23 @@
 package io.github.alen_alex.messageframework;
 
+import io.github.alen_alex.messageframework.builder.bossbar.ComponentBossBarBuilder;
 import io.github.alen_alex.messageframework.builder.framework.FrameworkBuilder;
 import io.github.alen_alex.messageframework.builder.title.ComponentTitleBuilder;
 import io.github.alen_alex.messageframework.placeholders.InternalPlaceholders;
 import io.github.alen_alex.messageframework.translator.TranslatorEngine;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
+import org.bukkit.World;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Predicate;
 
 public interface MessageFramework {
 
@@ -125,6 +132,39 @@ public interface MessageFramework {
     void sendTitle(@NotNull UUID uuid, @NotNull ComponentTitleBuilder builder);
 
     void sendTitle(@NotNull List<UUID> playerUID, @NotNull ComponentTitleBuilder builder);
+
+    BossBar showBossBar(@NotNull final Player player, @NotNull BossBar bossBar);
+
+    BossBar hideBossBar(@NotNull final Player player, @NotNull BossBar bossBar);
+
+    BossBar showBossBar(@NotNull final UUID playerUID, @NotNull BossBar bossBar);
+
+    BossBar hideBossBar(@NotNull final UUID playerUID, @NotNull BossBar bossBar);
+
+    BossBar showCommonBossBar(@NotNull final List<UUID> playerUIDs, @NotNull BossBar bossBar);
+
+    BossBar showBossBar(@NotNull final Player player, @NotNull ComponentBossBarBuilder bossBar);
+
+    BossBar showBossBar(@NotNull final UUID playerUID, @NotNull ComponentBossBarBuilder bossBar);
+
+
+    BossBar showCommonBossBar(@NotNull final List<UUID> playerUIDs, @NotNull ComponentBossBarBuilder bossBar);
+
+    Audience getPlayerAudience(@NotNull final Player player);
+
+    Audience getPlayerAudience(@NotNull final UUID playerUID);
+
+    Audience getConsole();
+
+    Audience getAll();
+
+    Audience ofCondition(@NotNull final Predicate<CommandSender> playerPredicate);
+
+    Audience ofPermission(@NotNull final String permission);
+
+    Audience ofWorld(@NotNull final World world);
+
+    Optional<Audience> ofWorld(@NotNull final String worldName);
 
     TranslatorEngine engine() throws IllegalAccessException;
 

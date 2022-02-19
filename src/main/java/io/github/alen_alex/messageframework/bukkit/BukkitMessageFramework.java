@@ -3,20 +3,29 @@ package io.github.alen_alex.messageframework.bukkit;
 import io.github.alen_alex.messageframework.MessageFramework;
 import io.github.alen_alex.messageframework.abstracts.AbstractTranslator;
 
+import io.github.alen_alex.messageframework.builder.bossbar.ComponentBossBarBuilder;
 import io.github.alen_alex.messageframework.builder.title.ComponentTitleBuilder;
 import io.github.alen_alex.messageframework.placeholders.InternalPlaceholders;
 import io.github.alen_alex.messageframework.translator.TranslatorEngine;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.bossbar.BossBar;
+import net.kyori.adventure.key.Key;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
 import org.apache.commons.lang3.StringUtils;
+import org.bukkit.Bukkit;
+import org.bukkit.World;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Predicate;
 
 public class BukkitMessageFramework extends AbstractTranslator implements MessageFramework {
 
@@ -549,6 +558,93 @@ public class BukkitMessageFramework extends AbstractTranslator implements Messag
     @Override
     public void sendTitle(@NotNull List<UUID> playerUID, @NotNull ComponentTitleBuilder builder) {
         this.sendTitle(playerUID,builder.build());
+    }
+
+    @Override
+    public BossBar showBossBar(@NotNull Player player, @NotNull BossBar bossBar) {
+        this.audiences.player(player).showBossBar(bossBar);
+        return bossBar;
+    }
+
+    @Override
+    public BossBar hideBossBar(@NotNull Player player, @NotNull BossBar bossBar) {
+        this.audiences.player(player).hideBossBar(bossBar);
+        return bossBar;
+    }
+
+    @Override
+    public BossBar showBossBar(@NotNull UUID playerUID, @NotNull BossBar bossBar) {
+        this.audiences.player(playerUID).showBossBar(bossBar);
+        return bossBar;
+    }
+
+    @Override
+    public BossBar hideBossBar(@NotNull UUID playerUID, @NotNull BossBar bossBar) {
+        this.audiences.player(playerUID).hideBossBar(bossBar);
+        return bossBar;
+    }
+
+    @Override
+    public BossBar showCommonBossBar(@NotNull List<UUID> playerUIDs, @NotNull BossBar bossBar) {
+        playerUIDs.iterator().forEachRemaining(uids-> audiences.player(uids).showBossBar(bossBar));
+        return bossBar;
+    }
+
+    @Override
+    public BossBar showBossBar(@NotNull Player player, @NotNull ComponentBossBarBuilder bossBar) {
+        return this.showBossBar(player,bossBar.build());
+    }
+
+    @Override
+    public BossBar showBossBar(@NotNull UUID playerUID, @NotNull ComponentBossBarBuilder bossBar) {
+        return this.showBossBar(playerUID,bossBar.build());
+    }
+
+
+    @Override
+    public BossBar showCommonBossBar(@NotNull List<UUID> playerUIDs, @NotNull ComponentBossBarBuilder bossBar) {
+        return this.showCommonBossBar(playerUIDs,bossBar.build());
+    }
+
+    @Override
+    public Audience getPlayerAudience(@NotNull Player player) {
+        return audiences.player(player);
+    }
+
+    @Override
+    public Audience getPlayerAudience(@NotNull UUID playerUID) {
+        return audiences.player(playerUID);
+    }
+
+    @Override
+    public Audience getConsole() {
+        return audiences.console();
+    }
+
+    @Override
+    public Audience getAll() {
+        return audiences.all();
+    }
+
+    @Override
+    public Audience ofCondition(@NotNull Predicate<CommandSender> playerPredicate) {
+        return audiences.filter(playerPredicate);
+    }
+
+    @Override
+    public Audience ofPermission(@NotNull String permission) {
+        return audiences.permission(permission);
+    }
+
+    @Override
+    public Audience ofWorld(@NotNull World world) {
+        return audiences.world(Key.key(world.getName()));
+    }
+
+    @Override
+    public Optional<Audience> ofWorld(@NotNull String worldName) {
+        final World world = Bukkit.getWorld(worldName);
+        return world == null ? Optional.empty() : Optional.of(ofWorld(world));
     }
 
     @Override
