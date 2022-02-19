@@ -1,7 +1,7 @@
 package io.github.alen_alex.messageframework;
 
 import io.github.alen_alex.messageframework.builder.bossbar.ComponentBossBarBuilder;
-import io.github.alen_alex.messageframework.builder.framework.FrameworkBuilder;
+import io.github.alen_alex.messageframework.bukkit.framework.FrameworkBuilder;
 import io.github.alen_alex.messageframework.builder.title.ComponentTitleBuilder;
 import io.github.alen_alex.messageframework.placeholders.InternalPlaceholders;
 import io.github.alen_alex.messageframework.translator.TranslatorEngine;
@@ -146,7 +146,6 @@ public interface MessageFramework {
     BossBar showBossBar(@NotNull final Player player, @NotNull ComponentBossBarBuilder bossBar);
 
     BossBar showBossBar(@NotNull final UUID playerUID, @NotNull ComponentBossBarBuilder bossBar);
-
 
     BossBar showCommonBossBar(@NotNull final List<UUID> playerUIDs, @NotNull ComponentBossBarBuilder bossBar);
 

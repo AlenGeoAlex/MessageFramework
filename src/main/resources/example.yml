@@ -3,4 +3,4 @@ send-countdown:
   - "[DELAY]::1"
   - "[TITLE]::<green>Game starts in <gold>4 <green>secs"
   - "[DELAY]::1"
-  - "[]"
+  - "[SOUND]::"

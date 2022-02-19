@@ -1,4 +1,4 @@
-package io.github.alen_alex.messageframework.builder.framework;
+package io.github.alen_alex.messageframework.bukkit.framework;
 
 import io.github.alen_alex.messageframework.MessageFramework;
 import io.github.alen_alex.messageframework.bukkit.BukkitMessageFramework;
@@ -32,6 +32,11 @@ public class FrameworkBuilder {
 
     public FrameworkBuilder withMiniMessageEngine(){
         this.engine = new MiniMessageTranslatorImpl();
+
+        MessageFramework messageFramework = new FrameworkBuilder()
+                .buildDefault(javaPlugin);
+
+
         return this;
     }
 

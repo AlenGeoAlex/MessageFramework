@@ -70,7 +70,7 @@ public class InternalPlaceholders {
 
     public String parse(@NotNull String message){
         this.register.forEach((placeholder, toReplace) -> {
-            message.replace(placeholder, message);
+            message.replace(placeholder, toReplace);
         });
         return message;
     }

@@ -5,6 +5,7 @@ import io.github.alen_alex.messageframework.abstracts.AbstractTranslator;
 
 import io.github.alen_alex.messageframework.builder.bossbar.ComponentBossBarBuilder;
 import io.github.alen_alex.messageframework.builder.title.ComponentTitleBuilder;
+import io.github.alen_alex.messageframework.builder.title.StringTitleBuilder;
 import io.github.alen_alex.messageframework.placeholders.InternalPlaceholders;
 import io.github.alen_alex.messageframework.translator.TranslatorEngine;
 import net.kyori.adventure.audience.Audience;
@@ -484,22 +485,22 @@ public class BukkitMessageFramework extends AbstractTranslator implements Messag
 
     @Override
     public void sendActionBar(@NotNull Player player, @NotNull String message) {
-        this.audiences.player(player).sendMessage(this.engine.parse(message));
+        this.audiences.player(player).sendActionBar(this.engine.parse(message));
     }
 
     @Override
     public void sendActionBar(@NotNull Player player, @NotNull String message, @NotNull InternalPlaceholders placeholders) {
-        this.audiences.player(player).sendMessage(this.engine.parse(message,placeholders));
+        this.audiences.player(player).sendActionBar(this.engine.parse(message,placeholders));
     }
 
     @Override
     public void sendActionBar(@NotNull UUID playerUID, @NotNull String message) {
-        this.audiences.player(playerUID).sendMessage(this.engine.parse(message));
+        this.audiences.player(playerUID).sendActionBar(this.engine.parse(message));
     }
 
     @Override
     public void sendActionBar(@NotNull UUID playerUID, @NotNull String message, @NotNull InternalPlaceholders placeholders) {
-        this.audiences.player(playerUID).sendMessage(this.engine.parse(message,placeholders));
+        this.audiences.player(playerUID).sendActionBar(this.engine.parse(message,placeholders));
     }
 
     @Override
@@ -514,12 +515,12 @@ public class BukkitMessageFramework extends AbstractTranslator implements Messag
 
     @Override
     public void sendActionBarComponent(@NotNull Player player, @NotNull Component message) {
-        this.audiences.player(player).sendMessage(message);
+        this.audiences.player(player).sendActionBar(message);
     }
 
     @Override
     public void sendActionBarComponent(@NotNull UUID playerUID, @NotNull Component message) {
-        this.audiences.player(playerUID).sendMessage(message);
+        this.audiences.player(playerUID).sendActionBar(message);
 
     }
 
@@ -651,6 +652,7 @@ public class BukkitMessageFramework extends AbstractTranslator implements Messag
     public TranslatorEngine engine() throws IllegalAccessException {
         if(engine == null)
             throw new IllegalAccessException("Failed to instantiate the Translator Engine!");
+
         return this.engine;
     }
 

@@ -6,7 +6,7 @@
 
     <groupId>io.github.alen_alex</groupId>
     <artifactId>MessageFramework</artifactId>
-    <version>1.0</version>
+    <version>1.0-BETA</version>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -41,10 +41,6 @@
                             <createDependencyReducedPom>false</createDependencyReducedPom>
                             <minimizeJar>true</minimizeJar>
                             <relocations>
-                                <relocation>
-                                    <pattern>de.leonhard.storage</pattern>
-                                    <shadedPattern>io.github.alen_alex.messageframework.shading.storage</shadedPattern>
-                                </relocation>
                                 <relocation>
                                     <pattern>net.kyori</pattern>
                                     <shadedPattern>io.github.alen_alex.messageframework.shading.adventure</shadedPattern>
@@ -115,12 +111,6 @@
             <artifactId>spigot-api</artifactId>
             <version>1.8.8-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.github.simplix-softworks</groupId>
-            <artifactId>simplixstorage</artifactId>
-            <version>3.2.4</version>
         </dependency>
 
         <dependency>
