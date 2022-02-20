@@ -11,5 +11,9 @@ public interface IActions {
 
     CompletableFuture<Boolean> executeAction(@NotNull UUID playerUID, @NotNull MessageFramework framework);
 
+    default CompletableFuture<Boolean> executeAction(@NotNull MessageFramework framework){
+        return CompletableFuture.completedFuture(true);
+    }
+
     ActionType action();
 }

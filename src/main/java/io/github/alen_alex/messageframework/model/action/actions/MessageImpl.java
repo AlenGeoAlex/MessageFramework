@@ -6,15 +6,29 @@ import io.github.alen_alex.messageframework.model.action.interfaces.IActions;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 public class MessageImpl implements IActions {
 
-    private final Component text;
+    private final List<Component> text;
 
-    public MessageImpl(Component text) {
+    public MessageImpl(List<Component> text) {
         this.text = text;
+    }
+
+    public MessageImpl(@NotNull Component text){
+        this.text = new ArrayList<Component>(){{
+            add(text);
+        }};
+    }
+
+    public MessageImpl(Component... text){
+        this.text = Arrays.stream(text).collect(Collectors.toList());
     }
 
     @Override

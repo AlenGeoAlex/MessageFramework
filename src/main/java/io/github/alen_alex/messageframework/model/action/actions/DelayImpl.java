@@ -20,13 +20,24 @@ public class DelayImpl implements IActions {
 
     @Override
     public CompletableFuture<Boolean> executeAction(@NotNull UUID playerUID, @NotNull MessageFramework framework) {
-        System.out.println("Starting Delay Action");
         final CompletableFuture<Boolean> future = new CompletableFuture<>();
         final JavaPlugin plugin = (JavaPlugin) framework.getJavaPlugin();
         plugin.getServer().getScheduler().runTaskLaterAsynchronously(plugin, new Runnable() {
             @Override
             public void run() {
-                System.out.println("Completed Delay ACtion");
+                future.complete(true);
+            }
+        },secs);
+        return future;
+    }
+
+    @Override
+    public CompletableFuture<Boolean> executeAction(@NotNull MessageFramework framework) {
+        final CompletableFuture<Boolean> future = new CompletableFuture<>();
+        final JavaPlugin plugin = (JavaPlugin) framework.getJavaPlugin();
+        plugin.getServer().getScheduler().runTaskLaterAsynchronously(plugin, new Runnable() {
+            @Override
+            public void run() {
                 future.complete(true);
             }
         },secs);

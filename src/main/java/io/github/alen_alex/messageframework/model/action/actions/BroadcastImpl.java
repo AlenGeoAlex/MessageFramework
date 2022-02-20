@@ -26,6 +26,14 @@ public class BroadcastImpl implements IActions {
     }
 
     @Override
+    public CompletableFuture<Boolean> executeAction(@NotNull MessageFramework framework) {
+        final CompletableFuture<Boolean> future = new CompletableFuture<>();
+        framework.broadcastComponent(text);
+        future.complete(true);
+        return future;
+    }
+
+    @Override
     public ActionType action() {
         return ActionType.BROADCAST;
     }

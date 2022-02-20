@@ -170,7 +170,7 @@ public interface MessageFramework {
 
     Optional<Audience> ofWorld(@NotNull final String worldName);
 
-    TranslatorEngine engine() throws IllegalAccessException;
+    TranslatorEngine engine();
 
     default FrameworkBuilder builder(){
         return new FrameworkBuilder();
