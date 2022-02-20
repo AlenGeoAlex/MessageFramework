@@ -3,15 +3,19 @@ package io.github.alen_alex.messageframework.builder.bossbar;
 import io.github.alen_alex.messageframework.placeholders.InternalPlaceholders;
 import io.github.alen_alex.messageframework.translator.TranslatorEngine;
 import net.kyori.adventure.bossbar.BossBar;
-import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 
 public final class StringBossBarBuilder extends ComponentBossBarBuilder{
 
     private final TranslatorEngine engine;
 
-    private StringBossBarBuilder(Component text, @NotNull TranslatorEngine engine) {
-        super(text);
+    private StringBossBarBuilder(String text, @NotNull TranslatorEngine engine) {
+        super(engine.parse(text));
+        this.engine = engine;
+    }
+
+    private StringBossBarBuilder(@NotNull String text, @NotNull InternalPlaceholders placeholders, @NotNull TranslatorEngine engine){
+        super(engine.parse(text,placeholders));
         this.engine = engine;
     }
 
@@ -41,5 +45,13 @@ public final class StringBossBarBuilder extends ComponentBossBarBuilder{
     public StringBossBarBuilder overlay(BossBar.Overlay overlay) {
         super.overlay(overlay);
         return this;
+    }
+
+    public static StringBossBarBuilder builder(@NotNull String text, @NotNull TranslatorEngine engine){
+        return new StringBossBarBuilder(text,engine);
+    }
+
+    public static StringBossBarBuilder builder(@NotNull String text, @NotNull InternalPlaceholders placeholders, @NotNull TranslatorEngine engine){
+        return new StringBossBarBuilder(text,placeholders,engine);
     }
 }

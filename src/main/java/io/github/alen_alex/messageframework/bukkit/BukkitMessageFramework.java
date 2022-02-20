@@ -484,6 +484,16 @@ public class BukkitMessageFramework extends AbstractTranslator implements Messag
     }
 
     @Override
+    public void broadcastComponent(@NotNull Component component) {
+        audiences.all().sendMessage(component);
+    }
+
+    @Override
+    public void broadcastComponent(@NotNull List<Component> components) {
+        components.iterator().forEachRemaining(this::broadcastComponent);
+    }
+
+    @Override
     public void sendActionBar(@NotNull Player player, @NotNull String message) {
         this.audiences.player(player).sendActionBar(this.engine.parse(message));
     }
@@ -656,5 +666,9 @@ public class BukkitMessageFramework extends AbstractTranslator implements Messag
         return this.engine;
     }
 
+    @Override
+    public <T> T getJavaPlugin() {
+        return (T) plugin;
+    }
 
 }

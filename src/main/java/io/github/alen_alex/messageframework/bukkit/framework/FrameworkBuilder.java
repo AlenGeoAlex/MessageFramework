@@ -32,11 +32,6 @@ public class FrameworkBuilder {
 
     public FrameworkBuilder withMiniMessageEngine(){
         this.engine = new MiniMessageTranslatorImpl();
-
-        MessageFramework messageFramework = new FrameworkBuilder()
-                .buildDefault(javaPlugin);
-
-
         return this;
     }
 

@@ -12,6 +12,7 @@ import net.kyori.adventure.title.Title;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -103,6 +104,10 @@ public interface MessageFramework {
 
     void broadcast(@NotNull List<String> message, @NotNull InternalPlaceholders placeholders);
 
+    void broadcastComponent(@NotNull Component component);
+
+    void broadcastComponent(@NotNull List<Component> components);
+
     void sendActionBar(@NotNull Player player, @NotNull String message);
 
     void sendActionBar(@NotNull Player player, @NotNull String message, @NotNull InternalPlaceholders placeholders);
@@ -170,4 +175,6 @@ public interface MessageFramework {
     default FrameworkBuilder builder(){
         return new FrameworkBuilder();
     }
+
+    <T> T  getJavaPlugin();
 }

@@ -1,5 +1,6 @@
 package io.github.alen_alex.messageframework.placeholders;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -68,11 +69,12 @@ public class InternalPlaceholders {
         return this.register.containsKey(placeholder);
     }
 
-    public String parse(@NotNull String message){
+    public String parse(@NotNull final String message){
+        final String[] param = {message};
         this.register.forEach((placeholder, toReplace) -> {
-            message.replace(placeholder, toReplace);
+            param[0] = StringUtils.replace(param[0],placeholder,toReplace);
         });
-        return message;
+        return param[0];
     }
 
     public List<String> parse(@NotNull List<String> messages){
