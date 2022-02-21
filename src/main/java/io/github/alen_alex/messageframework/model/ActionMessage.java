@@ -6,6 +6,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -20,12 +21,12 @@ public class ActionMessage {
     }
 
     public void processList(@NotNull UUID playerUID){
-        final List<IActions> toProcess = actionsList;
+        final List<IActions> toProcess =  new ArrayList<>(actionsList);
         final JavaPlugin plugin = (JavaPlugin) framework.getJavaPlugin();
         BukkitRunnable runnable = new BukkitRunnable() {
             @Override
             public void run() {
-                if(actionsList.isEmpty()){
+                if(toProcess.isEmpty()){
                     this.cancel();
                     return;
                 }
@@ -42,12 +43,12 @@ public class ActionMessage {
     }
 
     public void processList(){
-        final List<IActions> toProcess = actionsList;
+        final List<IActions> toProcess = new ArrayList<>(actionsList);
         final JavaPlugin plugin = (JavaPlugin) framework.getJavaPlugin();
         BukkitRunnable runnable = new BukkitRunnable() {
             @Override
             public void run() {
-                if (actionsList.isEmpty()) {
+                if (toProcess.isEmpty()) {
                     this.cancel();
                     return;
                 }

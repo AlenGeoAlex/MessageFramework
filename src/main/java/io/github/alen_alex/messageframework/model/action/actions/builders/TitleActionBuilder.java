@@ -1,5 +1,6 @@
 package io.github.alen_alex.messageframework.model.action.actions.builders;
 
+import io.github.alen_alex.messageframework.abstracts.AbstractActionBuilder;
 import io.github.alen_alex.messageframework.builder.title.StringTitleBuilder;
 import io.github.alen_alex.messageframework.exception.IllegalMessageStatement;
 import io.github.alen_alex.messageframework.model.action.actions.TitleImpl;
@@ -10,16 +11,15 @@ import io.github.alen_alex.messageframework.placeholders.InternalPlaceholders;
 import io.github.alen_alex.messageframework.translator.TranslatorEngine;
 import org.jetbrains.annotations.NotNull;
 
-public class TitleActionBuilder implements IBuilder, IPlaceholder {
+public class TitleActionBuilder extends AbstractActionBuilder implements IBuilder, IPlaceholder {
 
-    private final String[] args;
-    private final TranslatorEngine engine;
 
     private InternalPlaceholders placeholders;
-    private TitleActionBuilder(String[] args, TranslatorEngine engine) {
-        this.args = args;
-        this.engine = engine;
+
+    public TitleActionBuilder(String[] args, TranslatorEngine engine) {
+        super(args, engine);
     }
+
 
     @Override
     public IActions build() {
@@ -76,5 +76,9 @@ public class TitleActionBuilder implements IBuilder, IPlaceholder {
     public TitleActionBuilder withPlaceholders(@NotNull InternalPlaceholders placeholders) {
         this.placeholders = placeholders;
         return this;
+    }
+
+    public static TitleActionBuilder builder(@NotNull String[] args, @NotNull TranslatorEngine engine){
+        return new TitleActionBuilder(args,engine);
     }
 }

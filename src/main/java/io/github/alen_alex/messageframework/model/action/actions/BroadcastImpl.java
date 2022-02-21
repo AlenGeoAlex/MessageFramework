@@ -11,7 +11,7 @@ import java.util.concurrent.CompletableFuture;
 
 public class BroadcastImpl implements IActions {
 
-    private final Component text;
+    protected final Component text;
 
     public BroadcastImpl(Component text) {
         this.text = text;

@@ -15,9 +15,9 @@ import java.util.stream.Collectors;
 
 public class MiniMessageTranslatorImpl implements TranslatorEngine{
 
-    private final static MiniMessage messageFormatter;
+    private final MiniMessage messageFormatter;
 
-    static {
+    public MiniMessageTranslatorImpl(){
         messageFormatter = MiniMessage.builder()
                 .tags(TagResolver.builder()
                         .resolver(StandardTags.color())
@@ -36,8 +36,23 @@ public class MiniMessageTranslatorImpl implements TranslatorEngine{
                 .build();
     }
 
-    public MiniMessageTranslatorImpl(){
-
+    public MiniMessageTranslatorImpl(boolean strict){
+        messageFormatter = MiniMessage.builder()
+                .tags(TagResolver.builder()
+                        .resolver(StandardTags.color())
+                        .resolver(StandardTags.decoration())
+                        .resolver(StandardTags.hoverEvent())
+                        .resolver(StandardTags.clickEvent())
+                        .resolver(StandardTags.keybind())
+                        .resolver(StandardTags.translatable())
+                        .resolver(StandardTags.translatable())
+                        .resolver(StandardTags.insertion())
+                        .resolver(StandardTags.font())
+                        .resolver(StandardTags.gradient())
+                        .resolver(StandardTags.rainbow())
+                        .build())
+                .strict(strict)
+                .build();
     }
 
     @Override

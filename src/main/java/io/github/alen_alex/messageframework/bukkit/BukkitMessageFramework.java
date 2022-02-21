@@ -3,9 +3,11 @@ package io.github.alen_alex.messageframework.bukkit;
 import io.github.alen_alex.messageframework.MessageFramework;
 import io.github.alen_alex.messageframework.abstracts.AbstractTranslator;
 
+import io.github.alen_alex.messageframework.builder.action.ActionMessageBuilder;
 import io.github.alen_alex.messageframework.builder.bossbar.ComponentBossBarBuilder;
 import io.github.alen_alex.messageframework.builder.title.ComponentTitleBuilder;
 import io.github.alen_alex.messageframework.builder.title.StringTitleBuilder;
+import io.github.alen_alex.messageframework.model.ActionMessage;
 import io.github.alen_alex.messageframework.placeholders.InternalPlaceholders;
 import io.github.alen_alex.messageframework.translator.TranslatorEngine;
 import net.kyori.adventure.audience.Audience;
@@ -25,6 +27,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Properties;
 import java.util.UUID;
 import java.util.function.Predicate;
 
@@ -531,7 +534,6 @@ public class BukkitMessageFramework extends AbstractTranslator implements Messag
     @Override
     public void sendActionBarComponent(@NotNull UUID playerUID, @NotNull Component message) {
         this.audiences.player(playerUID).sendActionBar(message);
-
     }
 
     @Override
@@ -618,6 +620,16 @@ public class BukkitMessageFramework extends AbstractTranslator implements Messag
     }
 
     @Override
+    public void sendActionMessages(@NotNull ActionMessage actionMessage, @NotNull Player player) {
+        actionMessage.processList(player.getUniqueId());
+    }
+
+    @Override
+    public void sendActionMessages(@NotNull ActionMessage actionMessage) {
+        actionMessage.processList();
+    }
+
+    @Override
     public Audience getPlayerAudience(@NotNull Player player) {
         return audiences.player(player);
     }
@@ -659,9 +671,9 @@ public class BukkitMessageFramework extends AbstractTranslator implements Messag
     }
 
     @Override
-    public TranslatorEngine engine() throws IllegalAccessException {
+    public TranslatorEngine engine() {
         if(engine == null)
-            throw new IllegalAccessException("Failed to instantiate the Translator Engine!");
+            throw new NullPointerException("Failed to instantiate the Translator Engine!");
 
         return this.engine;
     }

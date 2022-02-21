@@ -35,6 +35,11 @@ public class FrameworkBuilder {
         return this;
     }
 
+    public FrameworkBuilder withMiniMessageEngine(boolean strict){
+        this.engine = new MiniMessageTranslatorImpl(strict);
+        return this;
+    }
+
     public MessageFramework build(){
         Validate.notNull(this.javaPlugin, "JavaPlugin shouldn't be null, Set one using FrameworkBuilder#setPlugin()");
         Validate.notNull(this.engine, "Translation Engine cannot be null, Set either of the one using FrameworkBuilder#withMiniMessageEngine or FrameworkBuilder#withLegacyEngine or use withLegacyEngine#buildDefault");

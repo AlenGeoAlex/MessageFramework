@@ -6,7 +6,7 @@
 
     <groupId>io.github.alen_alex</groupId>
     <artifactId>MessageFramework</artifactId>
-    <version>1.0.4.1-BETA</version>
+    <version>1.0.4.2-BETA</version>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -122,7 +122,7 @@
         <dependency>
             <groupId>net.kyori</groupId>
             <artifactId>adventure-platform-bukkit</artifactId>
-            <version>4.0.0</version>
+            <version>4.0.1</version>
         </dependency>
 
         <dependency>

@@ -3,6 +3,7 @@ package io.github.alen_alex.messageframework;
 import io.github.alen_alex.messageframework.builder.bossbar.ComponentBossBarBuilder;
 import io.github.alen_alex.messageframework.bukkit.framework.FrameworkBuilder;
 import io.github.alen_alex.messageframework.builder.title.ComponentTitleBuilder;
+import io.github.alen_alex.messageframework.model.ActionMessage;
 import io.github.alen_alex.messageframework.placeholders.InternalPlaceholders;
 import io.github.alen_alex.messageframework.translator.TranslatorEngine;
 import net.kyori.adventure.audience.Audience;
@@ -153,6 +154,10 @@ public interface MessageFramework {
     BossBar showBossBar(@NotNull final UUID playerUID, @NotNull ComponentBossBarBuilder bossBar);
 
     BossBar showCommonBossBar(@NotNull final List<UUID> playerUIDs, @NotNull ComponentBossBarBuilder bossBar);
+
+    void sendActionMessages(@NotNull ActionMessage actionMessage, @NotNull final Player player);
+
+    void sendActionMessages(@NotNull ActionMessage actionMessage);
 
     Audience getPlayerAudience(@NotNull final Player player);
 
