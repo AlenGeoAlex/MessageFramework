@@ -2,7 +2,10 @@ package io.github.alen_alex.messageframework.builder.title;
 
 import io.github.alen_alex.messageframework.placeholders.InternalPlaceholders;
 import io.github.alen_alex.messageframework.translator.TranslatorEngine;
+import net.kyori.adventure.text.Component;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public final class StringTitleBuilder extends ComponentTitleBuilder{
 
@@ -28,8 +31,17 @@ public final class StringTitleBuilder extends ComponentTitleBuilder{
         return this;
     }
 
-    public StringTitleBuilder subtitle(@NotNull String subtitle){
+    public StringTitleBuilder subtitle(@Nullable String subtitle){
+        if(StringUtils.isEmpty(subtitle)){
+            return emptySubtitle();
+        }
+
         super.subtitle(engine.parse(subtitle));
+        return this;
+    }
+
+    public StringTitleBuilder emptySubtitle(){
+        super.subtitle(Component.empty());
         return this;
     }
 

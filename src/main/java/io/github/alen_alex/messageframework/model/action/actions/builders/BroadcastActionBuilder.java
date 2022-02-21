@@ -14,16 +14,17 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MessageActionBuilder extends AbstractActionBuilder implements IBuilder, IPlaceholder {
+public class BroadcastActionBuilder extends AbstractActionBuilder implements IBuilder, IPlaceholder {
 
     private InternalPlaceholders placeholders;
 
-    public MessageActionBuilder(String[] args, TranslatorEngine engine) {
+    public BroadcastActionBuilder(String[] args, TranslatorEngine engine) {
         super(args, engine);
     }
 
-    public static MessageActionBuilder builder(@NotNull String[] args, @NotNull final TranslatorEngine engine){
-        return  new MessageActionBuilder(args,engine);
+
+    public static BroadcastActionBuilder builder(@NotNull String[] args, @NotNull final TranslatorEngine engine){
+        return  new BroadcastActionBuilder(args,engine);
     }
 
     @Override
@@ -43,7 +44,9 @@ public class MessageActionBuilder extends AbstractActionBuilder implements IBuil
     }
 
     @Override
-    public MessageActionBuilder withPlaceholders(@NotNull InternalPlaceholders placeholders) {
-        return null;
+    public BroadcastActionBuilder withPlaceholders(@NotNull InternalPlaceholders placeholders) {
+        this.placeholders = placeholders;
+        return this;
     }
+
 }
