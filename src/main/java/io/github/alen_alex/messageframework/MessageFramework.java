@@ -27,17 +27,29 @@ public interface MessageFramework {
 
     void sendComponent(@NotNull final UUID playerUID, @NotNull Component message);
 
+    void sendComponent(@NotNull final Audience audience, @NotNull Component message);
+
     void sendComponent(@NotNull final Player player, @NotNull List<Component> message);
 
     void sendComponent(@NotNull final UUID playerUID, @NotNull List<Component> message);
+
+    void sendComponent(@NotNull final Audience audience, @NotNull List<Component> message);
 
     void sendMessage(@NotNull final Player player, @NotNull String message);
 
     void sendMessage(@NotNull final Player player, @NotNull String message, @NotNull InternalPlaceholders placeholders);
 
+    void sendMessage(@NotNull final Audience audience, @NotNull String message);
+
+    void sendMessage(@NotNull final Audience audience, @NotNull String message, @NotNull InternalPlaceholders placeholders);
+
     void sendMessage(@NotNull final Player player, @NotNull List<String> message);
 
     void sendMessage(@NotNull final Player player, @NotNull List<String> message, @NotNull InternalPlaceholders placeholders);
+
+    void sendMessage(@NotNull final Audience audience, @NotNull List<String> message);
+
+    void sendMessage(@NotNull final Audience audience, @NotNull List<String> message, @NotNull InternalPlaceholders placeholders);
 
     void sendMessage(@NotNull final UUID playerUID, @NotNull String message);
 
@@ -55,9 +67,15 @@ public interface MessageFramework {
 
     void sendMessageWithIntervalOf(@NotNull final UUID playerUID, @NotNull List<String> message, @NotNull InternalPlaceholders placeholders, int interval);
 
+    void sendMessageWithIntervalOf(@NotNull final Audience audience, @NotNull List<String> message, int interval);
+
+    void sendMessageWithIntervalOf(@NotNull final Audience audience, @NotNull List<String> message, @NotNull InternalPlaceholders placeholders, int interval);
+
     void sendComponentWithIntervalOf(@NotNull final Player player, @NotNull List<Component> message, int interval);
 
     void sendComponentWithIntervalOf(@NotNull final UUID playerUID, @NotNull List<Component> message, int interval);
+
+    void sendComponentWithIntervalOf(@NotNull final Audience audience, @NotNull List<Component> message, int interval);
 
     void broadcastWithIntervalOf(@NotNull List<String> message, int interval);
 
@@ -69,9 +87,17 @@ public interface MessageFramework {
 
     void sendMessageLater(@NotNull Player player, @NotNull String message, @NotNull InternalPlaceholders placeholders, int delay);
 
+    void sendMessageLater(@NotNull Audience audience, @NotNull String message, int delay);
+
+    void sendMessageLater(@NotNull Audience audience, @NotNull String message, @NotNull InternalPlaceholders placeholders, int delay);
+
     void sendMessageLater(@NotNull Player player, @NotNull List<String> message, int delay);
 
     void sendMessageLater(@NotNull Player player, @NotNull List<String> message, @NotNull InternalPlaceholders placeholders, int delay);
+
+    void sendMessageLater(@NotNull Audience audience, @NotNull List<String> message, int delay);
+
+    void sendMessageLater(@NotNull Audience audience, @NotNull List<String> message, @NotNull InternalPlaceholders placeholders, int delay);
 
     void sendMessageLater(@NotNull UUID playerUID, @NotNull String message, int delay);
 
@@ -88,6 +114,10 @@ public interface MessageFramework {
     void sendComponentLater(@NotNull UUID playerUID, @NotNull Component message, int delay);
 
     void sendComponentLater(@NotNull UUID playerUID, @NotNull List<Component> message, int delay);
+
+    void sendComponentLater(@NotNull Audience audience, @NotNull Component message, int delay);
+
+    void sendComponentLater(@NotNull Audience audience, @NotNull List<Component> message, int delay);
 
     void sendMessageOfPerm(@NotNull String perm, @NotNull String message);
 
@@ -121,11 +151,17 @@ public interface MessageFramework {
 
     void sendActionBar(@NotNull List<Player> players, @NotNull String message, @NotNull InternalPlaceholders placeholders);
 
+    void sendActionBar(@NotNull Audience audience, @NotNull String message);
+
+    void sendActionBar(@NotNull Audience audience, @NotNull String message, @NotNull InternalPlaceholders placeholders);
+
     void sendActionBarComponent(@NotNull Player player, @NotNull Component message);
 
     void sendActionBarComponent(@NotNull UUID playerUID, @NotNull Component message);
 
     void sendActionBarComponent(@NotNull List<UUID> playerUIDs, @NotNull Component message);
+
+    void sendActionBarComponent(@NotNull Audience audience, @NotNull Component component);
 
     void sendTitle(@NotNull Player player, @NotNull Title title);
 
@@ -133,11 +169,15 @@ public interface MessageFramework {
 
     void sendTitle(@NotNull List<UUID> playerUID, @NotNull Title title);
 
+    void sendTitle(@NotNull Audience audience, @NotNull Title title);
+
     void sendTitle(@NotNull Player player, @NotNull ComponentTitleBuilder builder);
 
     void sendTitle(@NotNull UUID uuid, @NotNull ComponentTitleBuilder builder);
 
     void sendTitle(@NotNull List<UUID> playerUID, @NotNull ComponentTitleBuilder builder);
+
+    void sendTitle(@NotNull Audience audience, @NotNull ComponentTitleBuilder builder);
 
     BossBar showBossBar(@NotNull final Player player, @NotNull BossBar bossBar);
 
@@ -147,6 +187,10 @@ public interface MessageFramework {
 
     BossBar hideBossBar(@NotNull final UUID playerUID, @NotNull BossBar bossBar);
 
+    BossBar showBossBar(@NotNull final Audience audience, @NotNull BossBar bossBar);
+
+    BossBar hideBossBar(@NotNull final Audience audience, @NotNull BossBar bossBar);
+
     BossBar showCommonBossBar(@NotNull final List<UUID> playerUIDs, @NotNull BossBar bossBar);
 
     BossBar showBossBar(@NotNull final Player player, @NotNull ComponentBossBarBuilder bossBar);
@@ -155,7 +199,7 @@ public interface MessageFramework {
 
     BossBar showCommonBossBar(@NotNull final List<UUID> playerUIDs, @NotNull ComponentBossBarBuilder bossBar);
 
-    void sendActionMessages(@NotNull ActionMessage actionMessage, @NotNull final Player player);
+    void sendActionMessages(@NotNull final Player player, @NotNull ActionMessage actionMessage);
 
     void sendActionMessages(@NotNull ActionMessage actionMessage);
 
@@ -172,6 +216,10 @@ public interface MessageFramework {
     Audience ofPermission(@NotNull final String permission);
 
     Audience ofWorld(@NotNull final World world);
+
+    Audience getPlayersOfName(@NotNull List<String> playerNames);
+
+    Audience getPlayersOf(@NotNull List<Player> players);
 
     Optional<Audience> ofWorld(@NotNull final String worldName);
 

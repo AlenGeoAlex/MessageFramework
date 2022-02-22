@@ -22,7 +22,6 @@ public class ActionBarImpl implements IActions {
     public CompletableFuture<Boolean> executeAction(@NotNull UUID playerUID, @NotNull MessageFramework framework) {
         final CompletableFuture<Boolean> future = new CompletableFuture<>();
         framework.sendActionBarComponent(playerUID,text);
-        System.out.println(text.toString());
         future.complete(true);
         return future;
     }

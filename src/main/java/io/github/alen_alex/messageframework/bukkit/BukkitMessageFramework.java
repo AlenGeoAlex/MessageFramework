@@ -8,12 +8,14 @@ import io.github.alen_alex.messageframework.builder.bossbar.ComponentBossBarBuil
 import io.github.alen_alex.messageframework.builder.title.ComponentTitleBuilder;
 import io.github.alen_alex.messageframework.builder.title.StringTitleBuilder;
 import io.github.alen_alex.messageframework.model.ActionMessage;
+import io.github.alen_alex.messageframework.model.action.interfaces.IActions;
 import io.github.alen_alex.messageframework.placeholders.InternalPlaceholders;
 import io.github.alen_alex.messageframework.translator.TranslatorEngine;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
+import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
 import org.apache.commons.lang3.StringUtils;
@@ -30,6 +32,7 @@ import java.util.Optional;
 import java.util.Properties;
 import java.util.UUID;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class BukkitMessageFramework extends AbstractTranslator implements MessageFramework {
 
@@ -53,6 +56,11 @@ public class BukkitMessageFramework extends AbstractTranslator implements Messag
     }
 
     @Override
+    public void sendComponent(@NotNull Audience audience, @NotNull Component message) {
+        audience.sendMessage(message);
+    }
+
+    @Override
     public void sendComponent(@NotNull Player player, @NotNull List<Component> message) {
         message.iterator().forEachRemaining(comp -> sendComponent(player,comp));
     }
@@ -60,6 +68,11 @@ public class BukkitMessageFramework extends AbstractTranslator implements Messag
     @Override
     public void sendComponent(@NotNull UUID playerUID, @NotNull List<Component> message) {
         message.iterator().forEachRemaining(comp -> sendComponent(playerUID,comp));
+    }
+
+    @Override
+    public void sendComponent(@NotNull Audience audience, @NotNull List<Component> message) {
+        message.iterator().forEachRemaining(m -> this.sendComponent(audience,m));
     }
 
     @Override
@@ -73,6 +86,16 @@ public class BukkitMessageFramework extends AbstractTranslator implements Messag
     }
 
     @Override
+    public void sendMessage(@NotNull Audience audience, @NotNull String message) {
+        audience.sendMessage(this.engine.parse(message));
+    }
+
+    @Override
+    public void sendMessage(@NotNull Audience audience, @NotNull String message, @NotNull InternalPlaceholders placeholders) {
+        audience.sendMessage(this.engine.parse(message,placeholders));
+    }
+
+    @Override
     public void sendMessage(@NotNull Player player, @NotNull List<String> message) {
        message.iterator().forEachRemaining(m -> sendMessage(player,m));
     }
@@ -80,6 +103,17 @@ public class BukkitMessageFramework extends AbstractTranslator implements Messag
     @Override
     public void sendMessage(@NotNull Player player, @NotNull List<String> message, @NotNull InternalPlaceholders placeholders) {
         message.iterator().forEachRemaining(m -> sendMessage(player,m,placeholders));
+    }
+
+    @Override
+    public void sendMessage(@NotNull Audience audience, @NotNull List<String> message) {
+        message.iterator().forEachRemaining(m->this.sendMessage(audience,m));
+    }
+
+    @Override
+    public void sendMessage(@NotNull Audience audience, @NotNull List<String> message, @NotNull InternalPlaceholders placeholders) {
+        message.iterator().forEachRemaining(m->this.sendMessage(audience,m,placeholders));
+
     }
 
     @Override
@@ -104,10 +138,13 @@ public class BukkitMessageFramework extends AbstractTranslator implements Messag
 
     @Override
     public void sendMessageWithIntervalOf(@NotNull Player player, @NotNull List<String> message, int interval) {
+        if(interval <= 0)
+            throw new IllegalArgumentException("Interval should be greater than 0 ticks!");
+
         if(message.isEmpty())
             return;
 
-        this.plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, new BukkitRunnable() {
+        final BukkitRunnable runnable = new BukkitRunnable() {
             @Override
             public void run() {
                 if(message.size() <= 0){
@@ -119,15 +156,20 @@ public class BukkitMessageFramework extends AbstractTranslator implements Messag
                 audiences.player(player).sendMessage(engine.parse(toSend));
                 message.remove(toSend);
             }
-        }, interval, interval);
+        };
+
+        runnable.runTaskTimerAsynchronously(plugin,interval,interval);
     }
 
     @Override
     public void sendMessageWithIntervalOf(@NotNull UUID playerUID, @NotNull List<String> message, int interval) {
+        if(interval <= 0)
+            throw new IllegalArgumentException("Interval should be greater than 0 ticks!");
+
         if(message.isEmpty())
             return;
 
-        this.plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, new BukkitRunnable() {
+        final BukkitRunnable runnable = new BukkitRunnable() {
             @Override
             public void run() {
                 if(message.size() <= 0){
@@ -139,15 +181,21 @@ public class BukkitMessageFramework extends AbstractTranslator implements Messag
                 audiences.player(playerUID).sendMessage(engine.parse(toSend));
                 message.remove(toSend);
             }
-        },interval,interval);
+        };
+
+        runnable.runTaskTimerAsynchronously(plugin,interval,interval);
     }
 
     @Override
     public void sendMessageWithIntervalOf(@NotNull Player player, @NotNull List<String> message, @NotNull InternalPlaceholders placeholders, int interval) {
+        if(interval <= 0)
+            throw new IllegalArgumentException("Interval should be greater than 0 ticks!");
+
         if(message.isEmpty())
             return;
 
-        this.plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, new BukkitRunnable() {
+
+        final BukkitRunnable runnable = new BukkitRunnable() {
             @Override
             public void run() {
                 if(message.size() <= 0){
@@ -159,15 +207,20 @@ public class BukkitMessageFramework extends AbstractTranslator implements Messag
                 audiences.player(player).sendMessage(engine.parse(toSend,placeholders));
                 message.remove(toSend);
             }
-        },interval,interval);
+        };
+
+        runnable.runTaskTimerAsynchronously(plugin,interval,interval);
     }
 
     @Override
     public void sendMessageWithIntervalOf(@NotNull UUID playerUID, @NotNull List<String> message, @NotNull InternalPlaceholders placeholders, int interval) {
+        if(interval <= 0)
+            throw new IllegalArgumentException("Interval should be greater than 0 ticks!");
+
         if(message.isEmpty())
             return;
 
-        this.plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, new BukkitRunnable() {
+        final BukkitRunnable runnable = new BukkitRunnable() {
             @Override
             public void run() {
                 if(message.size() <= 0){
@@ -179,15 +232,70 @@ public class BukkitMessageFramework extends AbstractTranslator implements Messag
                 audiences.player(playerUID).sendMessage(engine.parse(toSend,placeholders));
                 message.remove(toSend);
             }
-        },interval,interval);
+        };
+
+        runnable.runTaskTimerAsynchronously(plugin, interval,interval);
+    }
+
+    @Override
+    public void sendMessageWithIntervalOf(@NotNull Audience audience, @NotNull List<String> message, int interval) {
+        if(interval <= 0)
+            throw new IllegalArgumentException("Interval should be greater than 0 ticks!");
+
+        if(message.isEmpty())
+            return;
+
+        final BukkitRunnable runnable = new BukkitRunnable() {
+            @Override
+            public void run() {
+                if(message.size() <= 0){
+                    this.cancel();
+                    return;
+                }
+
+                final String toSend = message.get(0);
+                audience.sendMessage(engine.parse(toSend));
+                message.remove(toSend);
+            }
+        };
+
+        runnable.runTaskTimerAsynchronously(plugin, interval,interval);
+    }
+
+    @Override
+    public void sendMessageWithIntervalOf(@NotNull Audience audience, @NotNull List<String> message, @NotNull InternalPlaceholders placeholders, int interval) {
+        if(interval <= 0)
+            throw new IllegalArgumentException("Interval should be greater than 0 ticks!");
+
+        if(message.isEmpty())
+            return;
+
+        final BukkitRunnable runnable = new BukkitRunnable() {
+            @Override
+            public void run() {
+                if(message.size() <= 0){
+                    this.cancel();
+                    return;
+                }
+
+                final String toSend = message.get(0);
+                audience.sendMessage(engine.parse(toSend,placeholders));
+                message.remove(toSend);
+            }
+        };
+
+        runnable.runTaskTimerAsynchronously(plugin, interval,interval);
     }
 
     @Override
     public void sendComponentWithIntervalOf(@NotNull Player player, @NotNull List<Component> message, int interval) {
+        if(interval <= 0)
+            throw new IllegalArgumentException("Interval should be greater than 0 ticks!");
+
         if(message.isEmpty())
             return;
 
-        this.plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, new BukkitRunnable() {
+        final BukkitRunnable runnable = new BukkitRunnable() {
             @Override
             public void run() {
                 if(message.size() <= 0){
@@ -199,15 +307,20 @@ public class BukkitMessageFramework extends AbstractTranslator implements Messag
                 audiences.player(player).sendMessage(toSend);
                 message.remove(toSend);
             }
-        },interval,interval);
+        };
+
+        runnable.runTaskTimerAsynchronously(plugin, interval, interval);
     }
 
     @Override
     public void sendComponentWithIntervalOf(@NotNull UUID playerUID, @NotNull List<Component> message, int interval) {
+        if(interval <= 0)
+            throw new IllegalArgumentException("Interval should be greater than 0 ticks!");
+
         if(message.isEmpty())
             return;
 
-        this.plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, new BukkitRunnable() {
+        final BukkitRunnable runnable = new BukkitRunnable() {
             @Override
             public void run() {
                 if(message.size() <= 0){
@@ -219,15 +332,45 @@ public class BukkitMessageFramework extends AbstractTranslator implements Messag
                 audiences.player(playerUID).sendMessage(toSend);
                 message.remove(toSend);
             }
-        },interval,interval);
+        };
+
+        runnable.runTaskTimerAsynchronously(plugin, interval, interval);
+    }
+
+    @Override
+    public void sendComponentWithIntervalOf(@NotNull Audience audience, @NotNull List<Component> message, int interval) {
+        if(interval <= 0)
+            throw new IllegalArgumentException("Interval should be greater than 0 ticks!");
+
+        if(message.isEmpty())
+            return;
+
+        final BukkitRunnable runnable = new BukkitRunnable() {
+            @Override
+            public void run() {
+                if(message.size() <= 0){
+                    this.cancel();
+                    return;
+                }
+
+                final Component toSend = message.get(0);
+                audience.sendMessage(toSend);
+                message.remove(toSend);
+            }
+        };
+
+        runnable.runTaskTimerAsynchronously(plugin, interval, interval);
     }
 
     @Override
     public void broadcastWithIntervalOf(@NotNull List<String> message, int interval) {
+        if(interval <= 0)
+            throw new IllegalArgumentException("Interval should be greater than 0 ticks!");
+
         if(message.isEmpty())
             return;
 
-        this.plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, new BukkitRunnable() {
+        final BukkitRunnable runnable = new BukkitRunnable() {
             @Override
             public void run() {
                 if(message.size() <= 0){
@@ -239,15 +382,21 @@ public class BukkitMessageFramework extends AbstractTranslator implements Messag
                 audiences.all().sendMessage(engine.parse(toSend));
                 message.remove(toSend);
             }
-        },interval,interval);
+        };
+
+        runnable.runTaskTimerAsynchronously(plugin, interval, interval);
     }
 
     @Override
     public void broadcastWithIntervalOf(@NotNull List<String> message, @NotNull InternalPlaceholders placeholders, int interval) {
+        if(interval <= 0)
+            throw new IllegalArgumentException("Interval should be greater than 0 ticks!");
+
         if(message.isEmpty())
             return;
 
-        this.plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, new BukkitRunnable() {
+
+        final BukkitRunnable runnable = new BukkitRunnable() {
             @Override
             public void run() {
                 if(message.size() <= 0){
@@ -259,15 +408,21 @@ public class BukkitMessageFramework extends AbstractTranslator implements Messag
                 audiences.all().sendMessage(engine.parse(toSend,placeholders));
                 message.remove(toSend);
             }
-        },interval,interval);
+        };
+
+        runnable.runTaskTimerAsynchronously(plugin, interval, interval);
     }
 
     @Override
     public void broadcastComponentWithIntervalOf(@NotNull List<Component> message, int interval) {
+        if(interval <= 0)
+            throw new IllegalArgumentException("Interval should be greater than 0 ticks!");
+
         if(message.isEmpty())
             return;
 
-        this.plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, new BukkitRunnable() {
+
+        final BukkitRunnable runnable = new BukkitRunnable() {
             @Override
             public void run() {
                 if(message.size() <= 0){
@@ -279,11 +434,16 @@ public class BukkitMessageFramework extends AbstractTranslator implements Messag
                 audiences.all().sendMessage(toSend);
                 message.remove(toSend);
             }
-        },interval,interval);
+        };
+
+        runnable.runTaskTimerAsynchronously(plugin, interval, interval);
     }
 
     @Override
     public void sendMessageLater(@NotNull Player player, @NotNull String message, int delay) {
+        if(delay <= 0)
+            throw new IllegalArgumentException("Delay should be greater than 0 ticks!");
+
         if(StringUtils.isBlank(message))
             return;
 
@@ -297,6 +457,9 @@ public class BukkitMessageFramework extends AbstractTranslator implements Messag
 
     @Override
     public void sendMessageLater(@NotNull Player player, @NotNull String message, @NotNull InternalPlaceholders placeholders, int delay) {
+        if(delay <= 0)
+            throw new IllegalArgumentException("Delay should be greater than 0 ticks!");
+
         if(StringUtils.isBlank(message))
             return;
 
@@ -309,7 +472,42 @@ public class BukkitMessageFramework extends AbstractTranslator implements Messag
     }
 
     @Override
+    public void sendMessageLater(@NotNull Audience audience, @NotNull String message, int delay) {
+        if(delay <= 0)
+            throw new IllegalArgumentException("Delay should be greater than 0 ticks!");
+
+        if(StringUtils.isBlank(message))
+            return;
+
+        this.plugin.getServer().getScheduler().runTaskLaterAsynchronously(plugin, new Runnable() {
+            @Override
+            public void run() {
+                audience.sendMessage(engine.parse(message));
+            }
+        },delay);
+    }
+
+    @Override
+    public void sendMessageLater(@NotNull Audience audience, @NotNull String message, @NotNull InternalPlaceholders placeholders, int delay) {
+        if(delay <= 0)
+            throw new IllegalArgumentException("Delay should be greater than 0 ticks!");
+
+        if(StringUtils.isBlank(message))
+            return;
+
+        this.plugin.getServer().getScheduler().runTaskLaterAsynchronously(plugin, new Runnable() {
+            @Override
+            public void run() {
+                audience.sendMessage(engine.parse(message,placeholders));
+            }
+        },delay);
+    }
+
+    @Override
     public void sendMessageLater(@NotNull Player player, @NotNull List<String> message, int delay) {
+        if(delay <= 0)
+            throw new IllegalArgumentException("Delay should be greater than 0 ticks!");
+
         if(message.isEmpty())
             return;
 
@@ -325,6 +523,9 @@ public class BukkitMessageFramework extends AbstractTranslator implements Messag
 
     @Override
     public void sendMessageLater(@NotNull Player player, @NotNull List<String> message, @NotNull InternalPlaceholders placeholders, int delay) {
+        if(delay <= 0)
+            throw new IllegalArgumentException("Delay should be greater than 0 ticks!");
+
         if(message.isEmpty())
             return;
 
@@ -339,7 +540,20 @@ public class BukkitMessageFramework extends AbstractTranslator implements Messag
     }
 
     @Override
+    public void sendMessageLater(@NotNull Audience audience, @NotNull List<String> message, int delay) {
+        message.iterator().forEachRemaining(m -> sendMessageLater(audience,m,delay));
+    }
+
+    @Override
+    public void sendMessageLater(@NotNull Audience audience, @NotNull List<String> message, @NotNull InternalPlaceholders placeholders, int delay) {
+        message.iterator().forEachRemaining(m -> sendMessageLater(audience,m,placeholders,delay));
+    }
+
+    @Override
     public void sendMessageLater(@NotNull UUID playerUID, @NotNull String message, int delay) {
+        if(delay <= 0)
+            throw new IllegalArgumentException("Delay should be greater than 0 ticks!");
+
         if(StringUtils.isBlank(message))
             return;
 
@@ -353,6 +567,9 @@ public class BukkitMessageFramework extends AbstractTranslator implements Messag
 
     @Override
     public void sendMessageLater(@NotNull UUID playerUID, @NotNull String message, @NotNull InternalPlaceholders placeholders, int delay) {
+        if(delay <= 0)
+            throw new IllegalArgumentException("Delay should be greater than 0 ticks!");
+
         if(StringUtils.isBlank(message))
             return;
 
@@ -366,6 +583,9 @@ public class BukkitMessageFramework extends AbstractTranslator implements Messag
 
     @Override
     public void sendMessageLater(@NotNull UUID playerUID, @NotNull List<String> message, int delay) {
+        if(delay <= 0)
+            throw new IllegalArgumentException("Delay should be greater than 0 ticks!");
+
         if(message.isEmpty())
             return;
 
@@ -381,6 +601,9 @@ public class BukkitMessageFramework extends AbstractTranslator implements Messag
 
     @Override
     public void sendMessageLater(@NotNull UUID playerUID, @NotNull List<String> message, @NotNull InternalPlaceholders placeholders, int delay) {
+        if(delay <= 0)
+            throw new IllegalArgumentException("Delay should be greater than 0 ticks!");
+
         if(message.isEmpty())
             return;
 
@@ -396,6 +619,9 @@ public class BukkitMessageFramework extends AbstractTranslator implements Messag
 
     @Override
     public void sendComponentLater(@NotNull Player player, @NotNull Component message, int delay) {
+        if(delay <= 0)
+            throw new IllegalArgumentException("Delay should be greater than 0 ticks!");
+
         this.plugin.getServer().getScheduler().runTaskLaterAsynchronously(plugin, new Runnable() {
             @Override
             public void run() {
@@ -406,6 +632,9 @@ public class BukkitMessageFramework extends AbstractTranslator implements Messag
 
     @Override
     public void sendComponentLater(@NotNull Player player, @NotNull List<Component> message, int delay) {
+        if(delay <= 0)
+            throw new IllegalArgumentException("Delay should be greater than 0 ticks!");
+
         if(message.isEmpty())
             return;
 
@@ -421,6 +650,9 @@ public class BukkitMessageFramework extends AbstractTranslator implements Messag
 
     @Override
     public void sendComponentLater(@NotNull UUID playerUID, @NotNull Component message, int delay) {
+        if(delay <= 0)
+            throw new IllegalArgumentException("Delay should be greater than 0 ticks!");
+
         this.plugin.getServer().getScheduler().runTaskLaterAsynchronously(plugin, new Runnable() {
             @Override
             public void run() {
@@ -431,6 +663,9 @@ public class BukkitMessageFramework extends AbstractTranslator implements Messag
 
     @Override
     public void sendComponentLater(@NotNull UUID playerUID, @NotNull List<Component> message, int delay) {
+        if(delay <= 0)
+            throw new IllegalArgumentException("Delay should be greater than 0 ticks!");
+
         if(message.isEmpty())
             return;
 
@@ -440,6 +675,35 @@ public class BukkitMessageFramework extends AbstractTranslator implements Messag
                 message.iterator().forEachRemaining(comp -> {
                     audiences.player(playerUID).sendMessage(comp);
                 });
+            }
+        },delay);
+    }
+
+    @Override
+    public void sendComponentLater(@NotNull Audience audience, @NotNull Component message, int delay) {
+        if(delay <= 0)
+            throw new IllegalArgumentException("Delay should be greater than 0 ticks!");
+
+        this.plugin.getServer().getScheduler().runTaskLaterAsynchronously(plugin, new Runnable() {
+            @Override
+            public void run() {
+                audience.sendMessage(message);
+            }
+        },delay);
+    }
+
+    @Override
+    public void sendComponentLater(@NotNull Audience audience, @NotNull List<Component> message, int delay) {
+        if(delay <= 0)
+            throw new IllegalArgumentException("Delay should be greater than 0 ticks!");
+
+        if(message.isEmpty())
+            return;
+
+        this.plugin.getServer().getScheduler().runTaskLaterAsynchronously(plugin, new Runnable() {
+            @Override
+            public void run() {
+                message.iterator().forEachRemaining(audience::sendMessage);
             }
         },delay);
     }
@@ -527,6 +791,17 @@ public class BukkitMessageFramework extends AbstractTranslator implements Messag
     }
 
     @Override
+    public void sendActionBar(@NotNull Audience audience, @NotNull String message) {
+        audience.sendActionBar(this.engine.parse(message));
+    }
+
+    @Override
+    public void sendActionBar(@NotNull Audience audience, @NotNull String message, @NotNull InternalPlaceholders placeholders) {
+        audience.sendActionBar(this.engine.parse(message,placeholders));
+
+    }
+
+    @Override
     public void sendActionBarComponent(@NotNull Player player, @NotNull Component message) {
         this.audiences.player(player).sendActionBar(message);
     }
@@ -539,6 +814,11 @@ public class BukkitMessageFramework extends AbstractTranslator implements Messag
     @Override
     public void sendActionBarComponent(@NotNull List<UUID> playerUIDs, @NotNull Component message) {
         playerUIDs.iterator().forEachRemaining(uid -> this.sendActionBarComponent(playerUIDs,message));
+    }
+
+    @Override
+    public void sendActionBarComponent(@NotNull Audience audience, @NotNull Component component) {
+        audience.sendActionBar(component);
     }
 
     @Override
@@ -558,6 +838,11 @@ public class BukkitMessageFramework extends AbstractTranslator implements Messag
     }
 
     @Override
+    public void sendTitle(@NotNull Audience audience, @NotNull Title title) {
+        audience.showTitle(title);
+    }
+
+    @Override
     public void sendTitle(@NotNull Player player, @NotNull ComponentTitleBuilder builder) {
         this.sendTitle(player,builder.build());
     }
@@ -571,6 +856,11 @@ public class BukkitMessageFramework extends AbstractTranslator implements Messag
     @Override
     public void sendTitle(@NotNull List<UUID> playerUID, @NotNull ComponentTitleBuilder builder) {
         this.sendTitle(playerUID,builder.build());
+    }
+
+    @Override
+    public void sendTitle(@NotNull Audience audience, @NotNull ComponentTitleBuilder builder) {
+        this.sendTitle(audience,builder.build());
     }
 
     @Override
@@ -598,6 +888,18 @@ public class BukkitMessageFramework extends AbstractTranslator implements Messag
     }
 
     @Override
+    public BossBar showBossBar(@NotNull Audience audience, @NotNull BossBar bossBar) {
+        audience.showBossBar(bossBar);
+        return bossBar;
+    }
+
+    @Override
+    public BossBar hideBossBar(@NotNull Audience audience, @NotNull BossBar bossBar) {
+        audience.hideBossBar(bossBar);
+        return bossBar;
+    }
+
+    @Override
     public BossBar showCommonBossBar(@NotNull List<UUID> playerUIDs, @NotNull BossBar bossBar) {
         playerUIDs.iterator().forEachRemaining(uids-> audiences.player(uids).showBossBar(bossBar));
         return bossBar;
@@ -620,7 +922,7 @@ public class BukkitMessageFramework extends AbstractTranslator implements Messag
     }
 
     @Override
-    public void sendActionMessages(@NotNull ActionMessage actionMessage, @NotNull Player player) {
+    public void sendActionMessages(@NotNull Player player,@NotNull ActionMessage actionMessage) {
         actionMessage.processList(player.getUniqueId());
     }
 
@@ -662,6 +964,16 @@ public class BukkitMessageFramework extends AbstractTranslator implements Messag
     @Override
     public Audience ofWorld(@NotNull World world) {
         return audiences.world(Key.key(world.getName()));
+    }
+
+    @Override
+    public Audience getPlayersOfName(@NotNull List<String> players) {
+        return audiences.filter(cs -> players.contains(cs.getName()));
+    }
+
+    @Override
+    public Audience getPlayersOf(@NotNull List<Player> players) {
+        return getPlayersOfName(players.stream().map(Player::getName).collect(Collectors.toList()));
     }
 
     @Override
