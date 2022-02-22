@@ -13,8 +13,8 @@ public class StringBookBuilder extends ComponentBookBuilder{
 
     private final TranslatorEngine engine;
 
-    protected StringBookBuilder(@NotNull Component title, @NotNull Component author, @NotNull Collection<Component> pages, @NotNull TranslatorEngine engine) {
-        super(title, author, pages);
+    protected StringBookBuilder(@NotNull String title, @NotNull String author, @NotNull Collection<Component> pages, @NotNull TranslatorEngine engine) {
+        super(engine.parse(title), engine.parse(author), pages);
         this.engine = engine;
     }
 

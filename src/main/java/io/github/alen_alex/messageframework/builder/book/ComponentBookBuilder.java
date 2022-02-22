@@ -10,7 +10,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ComponentBookBuilder {
+public class ComponentBookBuilder implements BookBuilder{
 
     protected Component title = Component.empty();
     protected Component author = Component.empty();
@@ -85,6 +85,7 @@ public class ComponentBookBuilder {
         return this;
     }
 
+    @Override
     public Book build(){
         return Book.book(title,author,pages);
     }

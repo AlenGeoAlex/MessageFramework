@@ -4,15 +4,19 @@ import io.github.alen_alex.messageframework.MessageFramework;
 import io.github.alen_alex.messageframework.abstracts.AbstractTranslator;
 
 import io.github.alen_alex.messageframework.builder.action.ActionMessageBuilder;
+import io.github.alen_alex.messageframework.builder.book.BookBuilder;
+import io.github.alen_alex.messageframework.builder.bossbar.BossBarBuilder;
 import io.github.alen_alex.messageframework.builder.bossbar.ComponentBossBarBuilder;
 import io.github.alen_alex.messageframework.builder.title.ComponentTitleBuilder;
 import io.github.alen_alex.messageframework.builder.title.StringTitleBuilder;
+import io.github.alen_alex.messageframework.builder.title.TitleBuilder;
 import io.github.alen_alex.messageframework.model.ActionMessage;
 import io.github.alen_alex.messageframework.model.action.interfaces.IActions;
 import io.github.alen_alex.messageframework.placeholders.InternalPlaceholders;
 import io.github.alen_alex.messageframework.translator.TranslatorEngine;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.bossbar.BossBar;
+import net.kyori.adventure.inventory.Book;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.sound.Sound;
@@ -843,23 +847,23 @@ public class BukkitMessageFramework extends AbstractTranslator implements Messag
     }
 
     @Override
-    public void sendTitle(@NotNull Player player, @NotNull ComponentTitleBuilder builder) {
+    public void sendTitle(@NotNull Player player, @NotNull TitleBuilder builder) {
         this.sendTitle(player,builder.build());
     }
 
     @Override
-    public void sendTitle(@NotNull UUID playerUID, @NotNull ComponentTitleBuilder builder) {
+    public void sendTitle(@NotNull UUID playerUID, @NotNull TitleBuilder builder) {
         this.sendTitle(playerUID,builder.build());
 
     }
 
     @Override
-    public void sendTitle(@NotNull List<UUID> playerUID, @NotNull ComponentTitleBuilder builder) {
+    public void sendTitle(@NotNull List<UUID> playerUID, @NotNull TitleBuilder builder) {
         this.sendTitle(playerUID,builder.build());
     }
 
     @Override
-    public void sendTitle(@NotNull Audience audience, @NotNull ComponentTitleBuilder builder) {
+    public void sendTitle(@NotNull Audience audience, @NotNull TitleBuilder builder) {
         this.sendTitle(audience,builder.build());
     }
 
@@ -906,18 +910,18 @@ public class BukkitMessageFramework extends AbstractTranslator implements Messag
     }
 
     @Override
-    public BossBar showBossBar(@NotNull Player player, @NotNull ComponentBossBarBuilder bossBar) {
+    public BossBar showBossBar(@NotNull Player player, @NotNull BossBarBuilder bossBar) {
         return this.showBossBar(player,bossBar.build());
     }
 
     @Override
-    public BossBar showBossBar(@NotNull UUID playerUID, @NotNull ComponentBossBarBuilder bossBar) {
+    public BossBar showBossBar(@NotNull UUID playerUID, @NotNull BossBarBuilder bossBar) {
         return this.showBossBar(playerUID,bossBar.build());
     }
 
 
     @Override
-    public BossBar showCommonBossBar(@NotNull List<UUID> playerUIDs, @NotNull ComponentBossBarBuilder bossBar) {
+    public BossBar showCommonBossBar(@NotNull List<UUID> playerUIDs, @NotNull BossBarBuilder bossBar) {
         return this.showCommonBossBar(playerUIDs,bossBar.build());
     }
 
@@ -929,6 +933,46 @@ public class BukkitMessageFramework extends AbstractTranslator implements Messag
     @Override
     public void sendActionMessages(@NotNull ActionMessage actionMessage) {
         actionMessage.processList();
+    }
+
+    @Override
+    public void openBook(@NotNull Player player, @NotNull Book book) {
+        this.audiences.player(player).openBook(book);
+    }
+
+    @Override
+    public void openBook(@NotNull UUID playerUID, @NotNull Book book) {
+        this.audiences.player(playerUID).openBook(book);
+    }
+
+    @Override
+    public void openBook(@NotNull Audience audience, @NotNull Book book) {
+        audience.openBook(book);
+    }
+
+    @Override
+    public void openBook(@NotNull List<UUID> playerUID, @NotNull Book book) {
+        playerUID.iterator().forEachRemaining(uid -> this.openBook(uid,book));
+    }
+
+    @Override
+    public void openBook(@NotNull Player player, @NotNull BookBuilder book) {
+        this.openBook(player,book.build());
+    }
+
+    @Override
+    public void openBook(@NotNull UUID playerUID, @NotNull BookBuilder book) {
+        this.openBook(playerUID,book.build());
+    }
+
+    @Override
+    public void openBook(@NotNull Audience audience, @NotNull BookBuilder book) {
+        this.openBook(audience,book.build());
+    }
+
+    @Override
+    public void openBook(@NotNull List<UUID> playerUID, @NotNull BookBuilder book) {
+        this.openBook(playerUID,book.build());
     }
 
     @Override

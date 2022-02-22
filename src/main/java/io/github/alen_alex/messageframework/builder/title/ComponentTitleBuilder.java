@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.time.Duration;
 
-public class ComponentTitleBuilder {
+public class ComponentTitleBuilder implements TitleBuilder {
 
     protected Component title = Component.empty();
     protected Component subtitle = Component.empty();
@@ -86,6 +86,7 @@ public class ComponentTitleBuilder {
         return stay;
     }
 
+    @Override
     public Title build(){
         return Title.title(title,subtitle,Title.Times.times(Duration.ofMillis(fadeIn),Duration.ofMillis(fadeIn),Duration.ofMillis(fadeIn)));
     }

@@ -8,6 +8,7 @@ import io.github.alen_alex.messageframework.model.ActionMessage;
 import io.github.alen_alex.messageframework.model.action.actions.builders.*;
 import io.github.alen_alex.messageframework.model.action.interfaces.IActions;
 import io.github.alen_alex.messageframework.placeholders.InternalPlaceholders;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.jetbrains.annotations.NotNull;
 
@@ -142,5 +143,32 @@ public class ActionMessageBuilder {
 
     public static ActionMessageBuilder builder(@NotNull MessageFramework framework){
         return new ActionMessageBuilder(framework);
+    }
+
+    public static boolean isValidSyntax(@NotNull String actionMessage){
+        if(StringUtils.isBlank(actionMessage))
+            return false;
+
+        final String[] splitMsg = actionMessage.split(DELIMITER);
+        if(splitMsg.length == 0)
+            return false;
+
+        ActionType type = Arrays.stream(ActionType.values()).filter(actionType -> splitMsg[0].equals(actionType.getActionTag())).findFirst().orElse(null);
+        if(type == null)
+            return false;
+
+        return true;
+    }
+
+    public static boolean isValidSyntax(@NotNull List<String> actionMessage){
+        boolean valid = true;
+        for(String message : actionMessage){
+            if(!isValidSyntax(message)){
+                valid = false;
+                break;
+            }
+        }
+
+        return valid;
     }
 }

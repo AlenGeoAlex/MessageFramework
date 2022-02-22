@@ -4,7 +4,7 @@ import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 
-public class ComponentBossBarBuilder {
+public class ComponentBossBarBuilder implements BossBarBuilder {
 
     private Component text;
     private float progress = 0.0f;
@@ -58,6 +58,7 @@ public class ComponentBossBarBuilder {
         return this;
     }
 
+    @Override
     public BossBar build(){
         return BossBar.bossBar(text,progress,color,overlay);
     }

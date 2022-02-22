@@ -1,6 +1,9 @@
 package io.github.alen_alex.messageframework;
 
+import io.github.alen_alex.messageframework.builder.book.BookBuilder;
+import io.github.alen_alex.messageframework.builder.bossbar.BossBarBuilder;
 import io.github.alen_alex.messageframework.builder.bossbar.ComponentBossBarBuilder;
+import io.github.alen_alex.messageframework.builder.title.TitleBuilder;
 import io.github.alen_alex.messageframework.bukkit.framework.FrameworkBuilder;
 import io.github.alen_alex.messageframework.builder.title.ComponentTitleBuilder;
 import io.github.alen_alex.messageframework.model.ActionMessage;
@@ -8,6 +11,7 @@ import io.github.alen_alex.messageframework.placeholders.InternalPlaceholders;
 import io.github.alen_alex.messageframework.translator.TranslatorEngine;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.bossbar.BossBar;
+import net.kyori.adventure.inventory.Book;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
 import org.bukkit.World;
@@ -171,13 +175,13 @@ public interface MessageFramework {
 
     void sendTitle(@NotNull Audience audience, @NotNull Title title);
 
-    void sendTitle(@NotNull Player player, @NotNull ComponentTitleBuilder builder);
+    void sendTitle(@NotNull Player player, @NotNull TitleBuilder builder);
 
-    void sendTitle(@NotNull UUID uuid, @NotNull ComponentTitleBuilder builder);
+    void sendTitle(@NotNull UUID uuid, @NotNull TitleBuilder builder);
 
-    void sendTitle(@NotNull List<UUID> playerUID, @NotNull ComponentTitleBuilder builder);
+    void sendTitle(@NotNull List<UUID> playerUID, @NotNull TitleBuilder builder);
 
-    void sendTitle(@NotNull Audience audience, @NotNull ComponentTitleBuilder builder);
+    void sendTitle(@NotNull Audience audience, @NotNull TitleBuilder builder);
 
     BossBar showBossBar(@NotNull final Player player, @NotNull BossBar bossBar);
 
@@ -193,15 +197,31 @@ public interface MessageFramework {
 
     BossBar showCommonBossBar(@NotNull final List<UUID> playerUIDs, @NotNull BossBar bossBar);
 
-    BossBar showBossBar(@NotNull final Player player, @NotNull ComponentBossBarBuilder bossBar);
+    BossBar showBossBar(@NotNull final Player player, @NotNull BossBarBuilder bossBar);
 
-    BossBar showBossBar(@NotNull final UUID playerUID, @NotNull ComponentBossBarBuilder bossBar);
+    BossBar showBossBar(@NotNull final UUID playerUID, @NotNull BossBarBuilder bossBar);
 
-    BossBar showCommonBossBar(@NotNull final List<UUID> playerUIDs, @NotNull ComponentBossBarBuilder bossBar);
+    BossBar showCommonBossBar(@NotNull final List<UUID> playerUIDs, @NotNull BossBarBuilder bossBar);
 
     void sendActionMessages(@NotNull final Player player, @NotNull ActionMessage actionMessage);
 
     void sendActionMessages(@NotNull ActionMessage actionMessage);
+
+    void openBook(@NotNull Player player, @NotNull Book book);
+
+    void openBook(@NotNull UUID playerUID, @NotNull Book book);
+
+    void openBook(@NotNull Audience audience, @NotNull Book book);
+
+    void openBook(@NotNull List<UUID> playerUID, @NotNull Book book);
+
+    void openBook(@NotNull Player player, @NotNull BookBuilder book);
+
+    void openBook(@NotNull UUID playerUID, @NotNull BookBuilder book);
+
+    void openBook(@NotNull Audience audience, @NotNull BookBuilder book);
+
+    void openBook(@NotNull List<UUID> playerUID, @NotNull BookBuilder book);
 
     Audience getPlayerAudience(@NotNull final Player player);
 
