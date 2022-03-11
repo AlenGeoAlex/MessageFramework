@@ -532,6 +532,7 @@ public class BukkitMessageFramework extends AbstractTranslator implements Messag
 
         if(message.isEmpty())
             return;
+        
 
         this.plugin.getServer().getScheduler().runTaskLaterAsynchronously(plugin, new Runnable() {
             @Override
